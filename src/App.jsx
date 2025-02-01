@@ -351,8 +351,9 @@ import React, { useState, useRef, useEffect } from 'react';
         });
 
         const geminiResponse = await fetchGeminiResponse(prompt);
-        setResponse(geminiResponse);
-        setQuestion(geminiResponse);
+        const parts = geminiResponse.split("Pregunta de seguimiento:");
+        setResponse(parts[0].trim());
+        setQuestion(parts[1] ? parts[1].trim() : "");
         setConversationHistory(updatedHistory);
 
         const checkPrompt = `Evalúa la respuesta del usuario a la pregunta anterior. Si la respuesta es incorrecta o necesita mejora, sugiere una respuesta mejorada de nivel ${difficultyOptions[difficulty]}. Si la respuesta es correcta, responde con "Correcto".\nPregunta: ${question}\nRespuesta del usuario: ${userMessage}`;
@@ -449,7 +450,7 @@ import React, { useState, useRef, useEffect } from 'react';
                 {message.role === 'user' ? `Tú: ${message.content}` : `Profesor: ${message.content}`}
               </Response>
             ))}
-            {response && <Response style={{ fontStyle: 'italic', textAlign: 'left' }}>Profesor: {response}</Response>}
+            {response && <Response style={{ fontStyle: 'italic', textAlign: 'left' }}>{response}</Response>}
             <div style={{marginTop: 'auto'}}>
              <Input
                   as="textarea"
